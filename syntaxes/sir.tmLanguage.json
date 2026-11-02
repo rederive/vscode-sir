@@ -1,0 +1,169 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "SIR",
+  "scopeName": "source.sir",
+  "fileTypes": [
+    "sir"
+  ],
+  "patterns": [
+    {
+      "include": "#legacy"
+    },
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#pinned"
+    },
+    {
+      "include": "#rule"
+    },
+    {
+      "include": "#note"
+    },
+    {
+      "include": "#header"
+    },
+    {
+      "include": "#contract"
+    },
+    {
+      "include": "#data"
+    },
+    {
+      "include": "#langfile"
+    },
+    {
+      "include": "#prose"
+    },
+    {
+      "include": "#inline"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "match": "(?:^|(?<=\\s))#(?=\\s|$).*$",
+      "name": "invalid.illegal.comment.sir",
+      "comment": "A # outside a literal is E_COMMENT in strict v0.5 (SIR_SCHEMA §23a grammar rule 2): shown as an error."
+    },
+    "pinned": {
+      "match": "^(PINNED)\\s+(\\w+)\\s+([\\w.-]+)\\s*(=)\\s*(.*?)(?=\\s+(?:CITED|EARNED|ANCHOR)\\b|$)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.pinned.sir"
+        },
+        "2": {
+          "name": "storage.type.pin-kind.sir"
+        },
+        "3": {
+          "name": "variable.other.constant.pin.sir"
+        },
+        "4": {
+          "name": "keyword.operator.assignment.sir"
+        },
+        "5": {
+          "name": "string.regexp.sir"
+        }
+      }
+    },
+    "rule": {
+      "match": "^(R\\d+)\\b",
+      "captures": {
+        "1": {
+          "name": "entity.name.function.rule.sir"
+        }
+      }
+    },
+    "note": {
+      "begin": "^(NOTE|NOTES)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.prose.sir"
+        }
+      },
+      "while": "^[ \\t]+",
+      "name": "comment.block.documentation.note.sir"
+    },
+    "header": {
+      "match": "^(UNIT|LANG|KIND|FIDELITY|ANCHOR|SRC|TRIGGER|REACH|ORACLE-CLASS|TRACE-SEAM|SEAM|PRIMARY-SHA256)\\b\\s*(.*)$",
+      "captures": {
+        "1": {
+          "name": "keyword.control.header.sir"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "\\b(FUNCTIONAL|EFFECT|STATE|package|spec|deterministic|trace|non-deterministic|entry|internal|off-path|js|ts|rust|php|csharp|python)\\b",
+              "name": "storage.modifier.sir"
+            },
+            {
+              "include": "#inline"
+            }
+          ]
+        }
+      }
+    },
+    "contract": {
+      "match": "^(SIG|ENVELOPE|DEPENDS-ON|BEHAVIOR|TABLE|UNGUARDED-PRECONDITION|OUT-OF-DOMAIN|STATE|EMIT|REQUEST|BRANCH|ON-ERROR|PAR|RING|LIFECYCLE|EFFECT|SURFACE)\\b",
+      "name": "keyword.control.contract.sir"
+    },
+    "data": {
+      "match": "^\\s*(CARRIED|SHAPE|CANONICAL-SHA256|AUTHORITY|ORACLE|EARNED)\\b",
+      "name": "keyword.control.data.sir"
+    },
+    "langfile": {
+      "match": "^(ABI|MECHANISM)\\b",
+      "name": "keyword.other.language.sir"
+    },
+    "prose": {
+      "match": "^(DESCRIPTION|PROVENANCE|RATIONALE|INVARIANT|SCOPE)\\b",
+      "name": "keyword.control.prose.sir",
+      "comment": "Prose (unverified prior) per SIR_SCHEMA §23a, including INVARIANT and SCOPE."
+    },
+    "inline": {
+      "patterns": [
+        {
+          "match": "\\b(CITED|EARNED|ANCHOR)\\b(?=\\s)",
+          "name": "keyword.other.attribute.sir"
+        },
+        {
+          "match": "\\b[0-9a-f]{64}\\b",
+          "name": "constant.numeric.hash.sir"
+        },
+        {
+          "match": "\\b[0-9a-f]{16}\\b",
+          "name": "constant.numeric.bits.sir"
+        },
+        {
+          "match": "\"(?:\\\\.|[^\"\\\\])*\"",
+          "name": "string.quoted.double.sir"
+        },
+        {
+          "match": "\\b(text|bytes|bool|none|i64|u64|f64|tuple|list|map|string|number|boolean|null|undefined|any|readonly|Option|u8|usize)\\b|&str\\b",
+          "name": "support.type.sir"
+        },
+        {
+          "match": "\\b(true|false|NaN|Infinity)\\b|(?<![\\w.])-Infinity\\b|(?<![\\w.])-0\\b",
+          "name": "constant.language.sir"
+        },
+        {
+          "match": "->|=>|⇒|⇐|≡|≠|≥|≤",
+          "name": "keyword.operator.arrow.sir"
+        },
+        {
+          "match": "(?<![\\w.])[+-]?\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?\\b",
+          "name": "constant.numeric.sir"
+        },
+        {
+          "match": "[\\[\\]{}()]",
+          "name": "punctuation.bracket.sir"
+        }
+      ]
+    },
+    "legacy": {
+      "match": "^(SIR|VARIANT|CARRIED-DATA|NOTES|GUARD-PINNED)\\b|^UNIT:",
+      "name": "invalid.deprecated.legacy.sir",
+      "comment": "v0.5 legacy spellings: read, never written (SIR_SCHEMA §23a) — UNIT, FIDELITY, CARRIED, NOTE, PINNED; and the `UNIT: name` colon form"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "name": "sir-lang",
+  "displayName": "SIR — Semantic IR for rederive",
+  "description": "Read and write SIR contracts with rdv's own checks as you type: binding and oracle hashes, the v0.5 lints, rule hovers and cross-file navigation, an outline of the rules, and a formatter that can never stale a binding.",
+  "version": "0.2.1",
+  "publisher": "rederive",
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "homepage": "https://rederive.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rederive/vscode-sir.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rederive/vscode-sir/issues"
+  },
+  "galleryBanner": {
+    "color": "#0a0c12",
+    "theme": "dark"
+  },
+  "keywords": [
+    "sir",
+    "rederive",
+    "supply-chain",
+    "verification",
+    "contract",
+    "oracle",
+    "lsp"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Formatters"
+  ],
+  "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onLanguage:sir"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "sir",
+        "aliases": [
+          "SIR",
+          "sir"
+        ],
+        "extensions": [
+          ".sir"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sir",
+        "scopeName": "source.sir",
+        "path": "./syntaxes/sir.tmLanguage.json"
+      },
+      {
+        "scopeName": "markdown.sir.codeblock",
+        "path": "./syntaxes/sir.markdown.tmLanguage.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.sir": "sir"
+        }
+      }
+    ],
+    "configuration": {
+      "title": "SIR",
+      "properties": {
+        "sir.validation.mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "strict",
+            "legacy"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Strict for a v0.5 family (a language file, or a primary with language files beside it); legacy for a lone pre-v0.5 primary.",
+            "Always the strict v0.5 register: a `#` comment is an error.",
+            "Always the legacy register: `#` comments and older spellings are hints."
+          ],
+          "description": "Which register the checks hold a SIR file to."
+        },
+        "sir.codeLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the binding and oracle state above UNIT, PRIMARY-SHA256 and ORACLE."
+        },
+        "sir.check.languages": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Passed to `rdv check --lang` by **SIR: Check this package with rdv** (e.g. `js` or `js,ts`). Empty checks every language the package carries."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "sir.check",
+        "title": "Check this package with rdv",
+        "category": "SIR"
+      },
+      {
+        "command": "sir.copyPrimaryHash",
+        "title": "Copy the primary's PRIMARY-SHA256",
+        "category": "SIR"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "sir.copyPrimaryHash",
+          "when": "editorLangId == sir"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.mjs --bundle --platform=node --format=cjs --target=node18 --external:vscode --outfile=dist/extension.cjs",
+    "package": "npm run build && node scripts/pack.mjs",
+    "test": "npm run build && node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "rederive": "^0.5.2"
+  }
+}
