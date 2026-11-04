@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Engine updated to `rederive` 0.5.3 (the `rdv review` release), so the bundled analyzer matches the current `rdv check`
+  and `rdv lsp` byte for byte. No extension-side changes.
+
 ## 0.2.1
 
 - Moved to its own repo, [rederive/vscode-sir](https://github.com/rederive/vscode-sir). The engine now comes from the
